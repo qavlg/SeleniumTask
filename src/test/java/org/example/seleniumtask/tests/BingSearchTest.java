@@ -1,27 +1,26 @@
-package org.example.seleniumtask;
+package org.example.seleniumtask.tests;
 
+import com.sun.tools.javac.Main;
+import org.example.seleniumtask.pages.MainPage;
+import org.example.seleniumtask.pages.ResultPage;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.w3c.dom.html.HTMLInputElement;
 
 
-import java.sql.PreparedStatement;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
-public class MainPageTest {
+public class BingSearchTest {
 
     private WebDriver driver;
 
@@ -34,8 +33,7 @@ public class MainPageTest {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.get("https://www.bing.com/?)");
-
+        driver.get("https://www.bing.com/");
 
     }
 
@@ -45,22 +43,23 @@ public class MainPageTest {
     }
 
     @Test
-    public void search() {
-
+    public void searchResultTest() {
         String input = "Selenium";
-        WebElement searchField = driver.findElement(By.cssSelector("#sb_form_q")); // Поиск элемента по css
-        searchField.sendKeys(input);
-        searchField.submit(); // Клик
+        MainPage mp = new MainPage(driver);
+        mp.sendText(input);
+        ResultPage rp = new ResultPage(driver);
+
+//        driver.navigate().refresh(); // Обновление страницы
+//        WebElement searchField = driver.findElement(By.cssSelector("#sb_form_q")); // Поиск элемента по css
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(6)); // явное ожидание 6 сек
         wait.until(ExpectedConditions.and(
                 //ExpectedConditions.attributeContains(By.cssSelector("h2 > a[href]"), "href", "selenium"),
                 ExpectedConditions.elementToBeClickable(By.cssSelector("h2 > a[href]")) // явное ожидание пока элемент не станет кликабельным
         ));
+        rp.clickElement(0);
+//        List<WebElement> result = driver.findElements(By.cssSelector("h2 > a[href]")); // поиск списка элементов на странице
 
-        List<WebElement> result = driver.findElements(By.cssSelector("h2 > a[href]")); // поиск списка элементов на странице
-
-         result.get(0).click();
 
         List<String> tabs = new ArrayList<> (driver.getWindowHandles()); // когда открывается новая страница
         driver.switchTo().window(tabs.get(1));
@@ -74,14 +73,23 @@ public class MainPageTest {
 
         }
 
+    @Test
+    public void searchFieldTest() {
+            String input = "Selenium";
 
+            MainPage mp = new MainPage(driver);
+            mp.sendText(input);
+
+        ResultPage rp = new ResultPage(driver);
+
+            assertEquals(input, rp.getTextFromSearchField(),"Текст не совпал");
 
         //WebElement submitButton = driver.findElement(By.cssSelector("button[data-test='full-search-button']"));
         //submitButton.click();
 
 //        WebElement searchPageField = driver.findElement(By.cssSelector("#sb_form_q"));
 //        assertEquals(input, searchPageField.getAttribute("value"));
-
+    }
 
 //    @Test
 //    public void example() {
