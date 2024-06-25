@@ -28,7 +28,6 @@ public class MainPage {
             System.out.println("Введен текст: " + text);
         }
 
-
         public MainPage(WebDriver driver) {
             PageFactory.initElements(driver, this);
         }
