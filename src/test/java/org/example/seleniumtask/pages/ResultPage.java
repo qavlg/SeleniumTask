@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResultPage {
-     WebDriver driver;
+
+    WebDriver driver;
 
     @FindBy(css = "#sb_form_q")
     private WebElement searchField;
@@ -36,11 +37,15 @@ public class ResultPage {
     }
 
     public String getTextFromSearchField(){
-       String val = searchField.getAttribute("value");
+        String val = searchField.getAttribute("value");
         System.out.println("В строке поиска текст: " + val);
         return val;
     }
 
+
+
     public ResultPage(WebDriver driver) {
+        this.driver = driver;
         PageFactory.initElements(driver, this);}
+
 }
